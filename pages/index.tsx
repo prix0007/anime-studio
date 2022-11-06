@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Account from "../components/Account";
 import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
@@ -33,12 +34,7 @@ function Home() {
       </header>
 
       <main>
-        <h1>
-          Welcome to{" "}
-          <a href="https://github.com/mirshko/next-web3-boilerplate">
-            next-web3-boilerplate
-          </a>
-        </h1>
+        <h1>Welcome to Anime Studio</h1>
 
         {isConnected && (
           <section>
