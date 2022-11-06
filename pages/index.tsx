@@ -6,6 +6,7 @@ import Account from "../components/Account";
 import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
+import { useLivepeerProvider } from "@livepeer/react";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -35,7 +36,6 @@ function Home() {
 
       <main>
         <h1>Welcome to Anime Studio</h1>
-
         {isConnected && (
           <section>
             <ETHBalance />
