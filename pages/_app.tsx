@@ -9,10 +9,11 @@ import {
 } from "@livepeer/react";
 
 const client = createReactClient({
-  provider: studioProvider({ apiKey: process.env.LIVPEER_STUDIO_API_KEY }),
+  provider: studioProvider({ apiKey: process.env.NEXT_PUBLIC_LIVPEER_STUDIO_API_KEY }),
 });
 
 function NextWeb3App({ Component, pageProps }: AppProps) {
+  console.log(pageProps)
   return (
     <LivepeerConfig client={client}>
       <Web3ReactProvider getLibrary={getLibrary}>
