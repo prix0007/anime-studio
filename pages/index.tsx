@@ -7,6 +7,8 @@ import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
 import { useLivepeerProvider } from "@livepeer/react";
+import Button from "../components/Button";
+import Navbar from "../components/Navbar";
 
 const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -20,41 +22,40 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>next-web3-boilerplate</title>
+        <title>Anime Studio</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <header>
-        <nav>
-          <Link href="/">
-            <a>next-web3-boilerplate</a>
-          </Link>
-
-          <Account triedToEagerConnect={triedToEagerConnect} />
-        </nav>
+        <Navbar />
       </header>
 
-      <main>
-        <h1>Welcome to Anime Studio</h1>
+      <main className="flex flex-col">
+        <h1 className="self-center text-6xl text-gray-900">
+          Welcome to Anime Studio.
+        </h1>
+        <h3 className="self-center text-base text-gray-900">
+          Here you can mint video NFTs, Buy access to videos and watch your
+          holding videos
+        </h3>
         {isConnected && (
-          <section>
-            <ETHBalance />
-
+          <section className="flex flex-col align-middle justify-center items-center">
             <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
           </section>
         )}
       </main>
-
-      <style jsx>{`
-        nav {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        main {
-          text-align: center;
-        }
-      `}</style>
+      <section className="flex flex-col align-middle justify-center items-center">
+        {isConnected ? (
+          <Button name={"Mint a Video NFT"} link={"/upload"} />
+        ) : (
+          <>
+            <Account triedToEagerConnect={triedToEagerConnect} />
+            <p className="self-center text-2xl my-3 text-gray-900">
+              Connect to you wallet to mint a Video NFT.
+            </p>
+          </>
+        )}
+      </section>
     </div>
   );
 }

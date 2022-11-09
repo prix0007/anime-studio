@@ -8,6 +8,10 @@ import { useWeb3React } from "@web3-react/core";
 import Account from "../../components/Account";
 import useEagerConnect from "../../hooks/useEagerConnect";
 import { Player } from "@livepeer/react";
+import Head from "next/head";
+import Navbar from "../../components/Navbar";
+import Button from "../../components/Button";
+import Link from "next/link";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -156,6 +160,7 @@ const Upload = () => {
       }
       if (asset?.status?.phase == "ready") {
         setProcessing(false);
+        setLoading(false);
         setIPFSExporting(true);
         updateStorageById(asset.id);
       }
@@ -187,8 +192,6 @@ const Upload = () => {
       onSuccess() {
         console.log("Upload finished:", upload.url);
         console.log(upload);
-
-        setLoading(false);
       },
     });
     const previousUploads = await upload.findPreviousUploads();
@@ -200,58 +203,115 @@ const Upload = () => {
 
   return (
     <>
-      <h1>Upload a Video</h1>
-      {isConnected ? (
-        !asset?.storage?.ipfs?.cid ? (
-          <>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
+      <Head>
+        <title>Mint a Video NFT</title>
+      </Head>
+      <header>
+        <Navbar />
+      </header>
+      <section className="flex flex-col">
+        <h1 className="self-center text-6xl text-gray-900 my-3">
+          Upload a Video and Mint NFT
+        </h1>
+        {isConnected ? (
+          !asset?.storage?.ipfs?.cid ? (
+            <>
+              {!file && (
+                <div
+                  className="flex justify-center items-center w-full"
+                  {...getRootProps()}
+                >
+                  <label className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <div className="flex flex-col justify-center items-center pt-5 pb-6">
+                      <svg
+                        aria-hidden="true"
+                        className="mb-3 w-10 h-10 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        ></path>
+                      </svg>
+                      {isDragActive ? (
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or Drop the files here ...
+                        </p>
+                      ) : (
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or Drag 'n' drop some files here, or click to select
+                          files
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        MP4 (MAX. 1000mb)
+                      </p>
+                    </div>
+                  </label>
+                  <input {...getInputProps()} />
+                </div>
+              )}
+
               <div>
-                {isDragActive ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <p>Drag 'n' drop some files here, or click to select files</p>
+                {file && !isLoading && !isProcessing && (
+                  <div className="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      {file.name}
+                    </h5>
+
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                      File Size: {(file.size / (1024 * 1024)).toFixed(2)} MB
+                    </p>
+                    <button
+                      className="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                      onClick={() => {
+                        setFile(null);
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 )}
               </div>
-            </div>
-            <div>
-              {file ? (
-                <p>Name: {file.name}</p>
-              ) : (
-                <p>Select a video file to upload.</p>
+              <Button
+                disabled={!file || isLoading || isProcessing}
+                onClick={handleUpload}
+                name={"Upload Video"}
+              />
+              {isLoading && <ClockLoader color="#000" />}
+              {isProcessing && (
+                <p className="text-lg text-gray-900">
+                  Processing !! <BarLoader color="#ABABAB" />{" "}
+                  {(asset?.status?.progress * 100).toFixed(2)}%
+                </p>
               )}
-            </div>
-            <button
-              disabled={!file || isLoading || isProcessing}
-              onClick={handleUpload}
-            >
-              Upload Video
-            </button>
-            {isLoading && <ClockLoader color="#000" />}
-            {isProcessing && (
-              <p>
-                Processing !! <BarLoader color="#ABABAB" />{" "}
-                {(asset?.status?.progress * 100).toFixed(2)}%
+              {isLoading && <p>Uploading : {progress}%</p>}
+            </>
+          ) : (
+            <>
+              {asset?.playbackId && <Player playbackId={asset?.playbackId} />}
+              <p className="text-lg text-gray-900 my-3">
+                Stored Successfully to IPFS as:{" "}
+                <Link href={asset?.storage?.ipfs?.nftMetadata?.gatewayUrl}>{asset?.storage?.ipfs?.nftMetadata?.cid}</Link>
               </p>
-            )}
-            {isLoading && <p>Uploading : {progress}%</p>}
-          </>
+              <Button name="Mint Video NFT!" />
+            </>
+          )
         ) : (
           <>
-          {asset?.playbackId && <Player playbackId={asset?.playbackId} />}
-          <p>
-            Stored Successfully to IPFS as:{" "}
-            {JSON.stringify(asset?.storage?.ipfs)}
-          </p>
+            <h3>Connect your wallet!!</h3>
+            <Account triedToEagerConnect={triedToEagerConnect} />
+            <p>{account}</p>
           </>
-        )
-      ) : (
-        <>
-          <h3>Connect your wallet!!</h3>
-          <Account triedToEagerConnect={triedToEagerConnect} />
-          <p>{account}</p>
-        </>
-      )}
+        )}
+      </section>
     </>
   );
 };
