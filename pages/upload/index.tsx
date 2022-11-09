@@ -282,7 +282,7 @@ const Upload = () => {
                       ) : (
                         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                           <span className="font-semibold">Click to upload</span>{" "}
-                          or Drag 'n' drop some files here, or click to select
+                          or Drag &apos;n&apos; drop some files here, or click to select
                           files
                         </p>
                       )}
@@ -372,6 +372,7 @@ const Upload = () => {
                   <a
                     href={`https://goerli.etherscan.io/tx/${tx.transactionHash}`}
                     target="_blank"
+                    rel="noreferrer"
                   >
                     {tx.transactionHash}
                   </a>
