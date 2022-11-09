@@ -22,7 +22,7 @@ const BuyTokens = ({ contractAddress }: TokenBalanceProps) => {
       console.log(ratio.toString());
       setCurrentRatio(ratio.toString());
     })();
-  }, []);
+  }, [contract]);
 
   const [amount, setAmount] = useState("");
 
