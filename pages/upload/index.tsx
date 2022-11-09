@@ -12,8 +12,13 @@ import Head from "next/head";
 import Navbar from "../../components/Navbar";
 import Button from "../../components/Button";
 import Link from "next/link";
+import useAnimeStudioContract from "../../hooks/useAnimeStudioContract";
+import { ethers } from "ethers";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const ANIME_STUDIO_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_ANIME_STUDIO_CONTRACT_ADDRESS;
 
 const Upload = () => {
   const [file, setFile] = useState<any>("");
@@ -23,11 +28,18 @@ const Upload = () => {
   const triedToEagerConnect = useEagerConnect();
   const isConnected = typeof account === "string" && !!library;
 
+  // AnimeStudio Contract
+  const animeContract = useAnimeStudioContract(ANIME_STUDIO_CONTRACT_ADDRESS);
+
   // Uploading Video Stuff
   const [isLoading, setLoading] = useState(false);
   const [isProcessing, setProcessing] = useState(false);
   const [isIPFSExporting, setIPFSExporting] = useState(false);
   const [progress, setProgress] = useState("0");
+
+  const [price, setPrice] = useState("");
+  const [tx, setTx] = useState(null);
+  const [txLoading, setTxLoading] = useState(true);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
@@ -201,6 +213,30 @@ const Upload = () => {
     upload.start();
   };
 
+  const handleMintNft = async () => {
+    console.log(asset.storage.ipfs);
+
+    if (asset.storage.ipfs) {
+      const playbackId = asset.playbackId;
+      const metaDataHash = asset.storage.ipfs.nftMetadata.cid;
+      const finalPrice = ethers.utils.parseEther(price);
+
+      setTxLoading(true);
+
+      const tx = await animeContract.addVideo(
+        playbackId,
+        metaDataHash,
+        finalPrice
+      );
+      const txReceipt = await tx.wait();
+      console.log(txReceipt);
+      setTx(txReceipt);
+      setTxLoading(false);
+    } else {
+      console.error("IPFS Asset not found!!");
+    }
+  };
+
   return (
     <>
       <Head>
@@ -280,28 +316,67 @@ const Upload = () => {
                   </div>
                 )}
               </div>
-              <Button
-                disabled={!file || isLoading || isProcessing}
-                onClick={handleUpload}
-                name={"Upload Video"}
-              />
-              {isLoading && <ClockLoader color="#000" />}
-              {isProcessing && (
-                <p className="text-lg text-gray-900">
-                  Processing !! <BarLoader color="#ABABAB" />{" "}
-                  {(asset?.status?.progress * 100).toFixed(2)}%
+              {!isIPFSExporting ? (
+                <>
+                  <Button
+                    disabled={!file || isLoading || isProcessing}
+                    onClick={handleUpload}
+                    name={"Upload Video"}
+                  />
+                  {isLoading && <ClockLoader color="#000" />}
+                  {isProcessing && (
+                    <p className="text-lg text-gray-900">
+                      Processing !! <BarLoader color="#ABABAB" />{" "}
+                      {(asset?.status?.progress * 100).toFixed(2)}%
+                    </p>
+                  )}
+                  {isLoading && <p>Uploading : {progress}%</p>}
+                </>
+              ) : (
+                <p className="self-center text-lg text-gray-900">
+                  <ClockLoader color="#000" />
+                  Storing Video in IPFS...
                 </p>
               )}
-              {isLoading && <p>Uploading : {progress}%</p>}
             </>
           ) : (
             <>
               {asset?.playbackId && <Player playbackId={asset?.playbackId} />}
               <p className="text-lg text-gray-900 my-3">
                 Stored Successfully to IPFS as:{" "}
-                <Link href={asset?.storage?.ipfs?.nftMetadata?.gatewayUrl}>{asset?.storage?.ipfs?.nftMetadata?.cid}</Link>
+                <Link href={asset?.storage?.ipfs?.nftMetadata?.gatewayUrl}>
+                  {asset?.storage?.ipfs?.nftMetadata?.cid}
+                </Link>
               </p>
-              <Button name="Mint Video NFT!" />
+              {!txLoading ? (
+                <>
+                  <p>Sending Transaction to the Blockchain...</p>
+                </>
+              ) : (
+                <>
+                  <input
+                    value={price}
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                    }}
+                    type="number"
+                    className="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Enter a price to set for the Video. 0.1, 0.2, ..."
+                  />
+                  <Button name="Mint Video NFT!" onClick={handleMintNft} />
+                </>
+              )}
+              {tx && (
+                <h3>
+                  Successfully send Tx with transaction ID:{" "}
+                  <a
+                    href={`https://goerli.etherscan.io/tx/${tx.transactionHash}`}
+                    target="_blank"
+                  >
+                    {tx.transactionHash}
+                  </a>
+                </h3>
+              )}
             </>
           )
         ) : (
