@@ -9,8 +9,9 @@ import useEagerConnect from "../hooks/useEagerConnect";
 import { useLivepeerProvider } from "@livepeer/react";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
+import BuyTokens from "../components/ButToken";
 
-const DAI_TOKEN_ADDRESS = "0x6b175474e89094c44da98b954eedeac495271d0f";
+const ANIME_STUDIO_ERC20_TOKEN = process.env.NEXT_PUBLIC_ANIME_STUDIO_ERC20_TOKEN_ADDRESS;
 
 function Home() {
   const { account, library } = useWeb3React();
@@ -18,6 +19,9 @@ function Home() {
   const triedToEagerConnect = useEagerConnect();
 
   const isConnected = typeof account === "string" && !!library;
+
+  const ANIME_STUDIO_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_ANIME_STUDIO_CONTRACT_ADDRESS;
 
   return (
     <div>
@@ -40,7 +44,8 @@ function Home() {
         </h3>
         {isConnected && (
           <section className="flex flex-col align-middle justify-center items-center">
-            <TokenBalance tokenAddress={DAI_TOKEN_ADDRESS} symbol="DAI" />
+            <TokenBalance tokenAddress={ANIME_STUDIO_ERC20_TOKEN} symbol="ANST" />
+            <BuyTokens contractAddress={ANIME_STUDIO_CONTRACT_ADDRESS} />
           </section>
         )}
       </main>
