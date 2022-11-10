@@ -26,7 +26,7 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Anime Studio</title>
+        <title>Anime Studio Saviour</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -36,11 +36,11 @@ function Home() {
 
       <main className="flex flex-col">
         <h1 className="self-center text-6xl text-gray-900">
-          Welcome to Anime Studio.
+          Welcome to Anime Studio Saviour
         </h1>
         <h3 className="self-center text-base text-gray-900">
-          Here you can mint video NFTs, Buy access to videos and watch your
-          holding videos
+          Here you can mint video NFTs, buy video access and then watch your
+          videos
         </h3>
         {isConnected && (
           <section className="flex flex-col align-middle justify-center items-center">
@@ -51,12 +51,12 @@ function Home() {
       </main>
       <section className="flex flex-col align-middle justify-center items-center">
         {isConnected ? (
-          <Button name={"Mint a Video NFT"} link={"/upload"} />
+          <Button name={"Mint Your Video NFT"} link={"/upload"} />
         ) : (
           <>
             <Account triedToEagerConnect={triedToEagerConnect} />
             <p className="self-center text-2xl my-3 text-gray-900">
-              Connect to you wallet to mint a Video NFT.
+              Connect your wallet and mint a Video NFT.
             </p>
           </>
         )}
