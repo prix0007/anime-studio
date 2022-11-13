@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import useAnimeStudioContract from "../hooks/useAnimeStudioContract";
 import useTokenContract from "../hooks/useTokenContract";
 import Button from "./Button";
+import Link from "next/link";
 
 const PosterImage = () => {
   return (
@@ -67,7 +68,7 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
       account,
       ANIME_STUDIO_CONTRACT_ADDRESS
     );
-    console.log(allowance)
+    console.log(allowance);
     if (allowance.lt(price)) {
       toast("Please allow anime studio contract to spend your ANST Token!!!");
       setAllowanceButton(true);
@@ -120,7 +121,13 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
           {videoDetails ? (
             <>
               <p>You have access to this video</p>
-              <a>Playback Id: {videoDetails.videoIpfs.slice(0, 20)}</a>
+              <div className="text-blue-600">
+                {" "}
+                Playback Id:{" "}
+                <Link href={`/player?videoId=${videoDetails.videoIpfs.slice(0, 20)}`}>
+                  {videoDetails.videoIpfs.slice(0, 20)}
+                </Link>
+              </div>
             </>
           ) : (
             <button

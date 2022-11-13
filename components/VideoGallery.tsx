@@ -29,7 +29,7 @@ const VideoGallery = ({ contractAddress }) => {
   return (
     <section className="overflow-hidden text-gray-700 ">
       <div className="container px-5 py-2 mx-auto lg:pt-12 lg:px-32">
-        <div className="flex flex-wrap -m-1 md:-m-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {videos ? (
             videos.map((video, _idx) => {
               // Dump code
@@ -37,7 +37,7 @@ const VideoGallery = ({ contractAddress }) => {
                 return;
               }
               return (
-                <div className="flex flex-wrap w-1/2" key={_idx}>
+                <div className="flex flex-wrap" key={_idx}>
                   <div className="w-full p-1 md:p-2">
                     <Video tokenId={_idx} {...video} />
                   </div>

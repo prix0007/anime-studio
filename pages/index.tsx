@@ -37,13 +37,11 @@ function Home() {
       </header>
 
       <main className="flex flex-col">
-        <h1 className="self-center text-6xl text-gray-900">
-          Welcome to Anime Studio Saviour
-        </h1>
-        <h3 className="self-center text-base text-gray-900">
+        <h3 className="self-center text-base text-gray-900 mt-5">
           Here you can mint video NFTs, buy video access and then watch your
           videos
         </h3>
+        <p className=" self-center text-sm text-red-500">We are currently only on Goerli Test Network.</p>
         {isConnected && (
           <section className="flex flex-col align-middle justify-center items-center">
             <TokenBalance
@@ -54,17 +52,8 @@ function Home() {
           </section>
         )}
       </main>
-      <section className="flex flex-col align-middle justify-center items-center">
-        {isConnected ? (
-          <Button name={"Mint a Video NFT"} link={"/upload"} />
-        ) : (
-          <>
-            <Account triedToEagerConnect={triedToEagerConnect} />
-            <p className="self-center text-2xl my-3 text-gray-900">
-              Connect your wallet and mint a Video NFT.
-            </p>
-          </>
-        )}
+      <section>
+        <VideoGallery contractAddress={ANIME_STUDIO_CONTRACT_ADDRESS} />
       </section>
     </div>
   );
