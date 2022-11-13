@@ -19,7 +19,6 @@ const BuyTokens = ({ contractAddress }: TokenBalanceProps) => {
   useEffect(() => {
     (async () => {
       const ratio = await contract.conversionRatio();
-      console.log(ratio.toString());
       setCurrentRatio(ratio.toString());
     })();
   }, [contract]);

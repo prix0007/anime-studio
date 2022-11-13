@@ -9,9 +9,11 @@ import useEagerConnect from "../hooks/useEagerConnect";
 import { useLivepeerProvider } from "@livepeer/react";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
-import BuyTokens from "../components/ButToken";
+import BuyTokens from "../components/BuyToken";
+import VideoGallery from "../components/VideoGallery";
 
-const ANIME_STUDIO_ERC20_TOKEN = process.env.NEXT_PUBLIC_ANIME_STUDIO_ERC20_TOKEN_ADDRESS;
+const ANIME_STUDIO_ERC20_TOKEN =
+  process.env.NEXT_PUBLIC_ANIME_STUDIO_ERC20_TOKEN_ADDRESS;
 
 function Home() {
   const { account, library } = useWeb3React();
@@ -21,7 +23,7 @@ function Home() {
   const isConnected = typeof account === "string" && !!library;
 
   const ANIME_STUDIO_CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_ANIME_STUDIO_CONTRACT_ADDRESS;
+    process.env.NEXT_PUBLIC_ANIME_STUDIO_CONTRACT_ADDRESS;
 
   return (
     <div>
@@ -44,14 +46,17 @@ function Home() {
         </h3>
         {isConnected && (
           <section className="flex flex-col align-middle justify-center items-center">
-            <TokenBalance tokenAddress={ANIME_STUDIO_ERC20_TOKEN} symbol="ANST" />
+            <TokenBalance
+              tokenAddress={ANIME_STUDIO_ERC20_TOKEN}
+              symbol="ANST"
+            />
             <BuyTokens contractAddress={ANIME_STUDIO_CONTRACT_ADDRESS} />
           </section>
         )}
       </main>
       <section className="flex flex-col align-middle justify-center items-center">
         {isConnected ? (
-          <Button name={"Mint Your Video NFT"} link={"/upload"} />
+          <Button name={"Mint a Video NFT"} link={"/upload"} />
         ) : (
           <>
             <Account triedToEagerConnect={triedToEagerConnect} />
