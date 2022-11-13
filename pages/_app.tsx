@@ -8,6 +8,9 @@ import {
   studioProvider,
 } from "@livepeer/react";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const client = createReactClient({
   provider: studioProvider({ apiKey: process.env.NEXT_PUBLIC_LIVPEER_STUDIO_API_KEY }),
 });
@@ -18,6 +21,7 @@ function NextWeb3App({ Component, pageProps }: AppProps) {
     <LivepeerConfig client={client}>
       <Web3ReactProvider getLibrary={getLibrary}>
         <Component {...pageProps} />
+        <ToastContainer />
       </Web3ReactProvider>
     </LivepeerConfig>
   );
