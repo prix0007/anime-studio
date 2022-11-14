@@ -52,6 +52,8 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
     return await res.json();
   });
 
+  console.log(data);
+
   const { data: videoDetails, error: videoError } =
     useAnimeStudioGetVideoDetails(ANIME_STUDIO_CONTRACT_ADDRESS, tokenId);
 
@@ -68,7 +70,6 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
       account,
       ANIME_STUDIO_CONTRACT_ADDRESS
     );
-    console.log(allowance);
     if (allowance.lt(price)) {
       toast("Please allow anime studio contract to spend your ANST Token!!!");
       setAllowanceButton(true);
@@ -98,7 +99,7 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
       <div className="rounded-lg shadow-lg bg-white max-w-sm">
         <Player
           title={data?.name}
-          playbackId={data?.animation_url}
+          playbackId={videoDetails && videoDetails.videoIpfs}
           loop={false}
           autoPlay={false}
           showTitle={false}
@@ -124,10 +125,17 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
               <div className="text-blue-600">
                 {" "}
                 Playback Id:{" "}
-                <Link href={`/player?videoId=${videoDetails.videoIpfs.slice(0, 20)}`}>
+                <Link
+                  href={`/player?videoId=${videoDetails.videoIpfs.slice(
+                    0,
+                    20
+                  )}`}
+                >
                   {videoDetails.videoIpfs.slice(0, 20)}
                 </Link>
               </div>
+              <h3 className="font-bold text-lg">Name: {data.name}</h3>
+              <p>Description: {data.description}</p>
             </>
           ) : (
             <button

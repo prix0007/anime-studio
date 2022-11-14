@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { AnimeStudio__factory, AnimeStudioFT__factory } from "../typechain-types";
 
-const CONVERSION_RATIO = 5;
+const CONVERSION_RATIO = 50;
 
 
 async function main() {
