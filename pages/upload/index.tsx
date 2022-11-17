@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import * as tusClient from "tus-js-client";
 import { useDropzone } from "react-dropzone";
@@ -17,6 +23,7 @@ import { ethers } from "ethers";
 
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { Contracts } from "../_app";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -33,8 +40,7 @@ const Upload = () => {
   const triedToEagerConnect = useEagerConnect();
   const isConnected = typeof account === "string" && !!library;
 
-  // AnimeStudio Contract
-  const animeContract = useAnimeStudioContract(ANIME_STUDIO_CONTRACT_ADDRESS);
+  
 
   // Uploading Video Stuff
   const [isLoading, setLoading] = useState(false);
@@ -45,6 +51,25 @@ const Upload = () => {
   const [price, setPrice] = useState("");
   const [tx, setTx] = useState(null);
   const [txLoading, setTxLoading] = useState(true);
+
+  const contracts = useContext(Contracts);
+
+  const [activeContracts, setActiveContracts] = useState<{
+    main: string;
+    token: string;
+    nft: string;
+  }>(null);
+
+  // AnimeStudio Contract
+  const animeContract = useAnimeStudioContract(activeContracts?.main);
+
+  useEffect(() => {
+    if (contracts[chainId]) {
+      setActiveContracts({
+        ...contracts[chainId],
+      });
+    }
+  }, [contracts]);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
@@ -61,17 +86,7 @@ const Upload = () => {
     onDrop,
   });
 
-  const [asset, setAsset] = useState<any>("farse");
-
-  // useEffect(() => {
-  //   if (asset && asset?.status?.phase === "ready") {
-  //     setIPFSExporting(true);
-  //     updateAsset({
-  //       assetId: asset?.id,
-  //       storage: { ipfs: true },
-  //     });
-  //   }
-  // }, [asset]);
+  const [asset, setAsset] = useState<any>("");
 
   const fetchResourceById = async (assetId: string) => {
     try {

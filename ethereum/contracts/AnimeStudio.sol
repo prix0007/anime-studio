@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import "./IAnimeSudioERC20.sol";
 
-import "./AnimeStudioERC721.sol";
+import "./IAnimeStudioERC721.sol";
 
 contract AnimeStudio {
     struct VideoDetails {
@@ -13,7 +13,7 @@ contract AnimeStudio {
         uint256 price;
     }
 
-    AnimeStudioERC721 animeStudioNFT;
+    IAnimeStudioERC721 animeStudioNFT;
     IAnimeStudioERC20 animeStudioToken;
 
     uint256 public conversionRatio;
@@ -33,8 +33,12 @@ contract AnimeStudio {
     event VideoAccessGranted(address creator, address grantedAddress);
     event VideoAccessRevoked(address creator, address revokedAddress);
 
-    constructor(address _animeStudioToken, uint256 _conversionRatio) {
-        animeStudioNFT = new AnimeStudioERC721();
+    constructor(
+        address _animeStudioToken,
+        address _animeStudioNft,
+        uint256 _conversionRatio
+    ) {
+        animeStudioNFT = IAnimeStudioERC721(_animeStudioNft);
         animeStudioToken = IAnimeStudioERC20(_animeStudioToken);
         conversionRatio = _conversionRatio;
     }

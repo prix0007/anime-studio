@@ -1,17 +1,37 @@
 import { useWeb3React } from "@web3-react/core";
 import Link from "next/link";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import useEagerConnect from "../hooks/useEagerConnect";
+import { Contracts } from "../pages/_app";
 import Account from "./Account";
 import Button from "./Button";
 import ETHBalance from "./ETHBalance";
+import TokenBalance from "./TokenBalance";
 
 const Navbar = () => {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const triedToEagerConnect = useEagerConnect();
 
   const isConnected = typeof account === "string" && !!library;
+
+  const contracts = useContext(Contracts);
+
+  const [activeContracts, setActiveContracts] = useState<{
+    main: string;
+    token: string;
+    nft: string;
+  }>(null);
+
+  useEffect(() => {
+    if (contracts[chainId]) {
+      setActiveContracts({
+        ...contracts[chainId],
+      });
+    }
+  }, [account]);
+
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
@@ -65,7 +85,13 @@ const Navbar = () => {
                     About
                   </a>
                 </li> */}
-                <ETHBalance />
+                <div className="flex flex-col justify-center">
+                  <ETHBalance />
+                  <TokenBalance
+                    tokenAddress={activeContracts?.token}
+                    symbol="ANST"
+                  />
+                </div>
                 <Account triedToEagerConnect={triedToEagerConnect} />
               </>
             )}

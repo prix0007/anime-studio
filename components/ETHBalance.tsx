@@ -4,7 +4,7 @@ import useETHBalance from "../hooks/useETHBalance";
 import { parseBalance } from "../util";
 
 const ETHBalance = () => {
-  const { account } = useWeb3React<Web3Provider>();
+  const { account, library } = useWeb3React<Web3Provider>();
   const { data } = useETHBalance(account);
 
   return (

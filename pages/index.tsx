@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Account from "../components/Account";
 import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
@@ -12,18 +12,35 @@ import Navbar from "../components/Navbar";
 import BuyTokens from "../components/BuyToken";
 import VideoGallery from "../components/VideoGallery";
 
-const ANIME_STUDIO_ERC20_TOKEN =
-  process.env.NEXT_PUBLIC_ANIME_STUDIO_ERC20_TOKEN_ADDRESS;
+import { Contracts } from "../pages/_app";
+import { toast } from "react-toastify";
 
 function Home() {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const triedToEagerConnect = useEagerConnect();
 
   const isConnected = typeof account === "string" && !!library;
 
-  const ANIME_STUDIO_CONTRACT_ADDRESS =
-    process.env.NEXT_PUBLIC_ANIME_STUDIO_CONTRACT_ADDRESS;
+  const contracts = useContext(Contracts);
+
+  const [activeContracts, setActiveContracts] = useState<{
+    main: string;
+    token: string;
+    nft: string;
+  }>(null);
+
+  useEffect(() => {
+    console.log(chainId);
+    console.log(contracts[chainId]);
+    if (contracts[chainId]) {
+      setActiveContracts({
+        ...contracts[chainId],
+      });
+    } else {
+      toast("We don't support this network.");
+    }
+  }, [account]);
 
   return (
     <div>
@@ -41,19 +58,18 @@ function Home() {
           Here you can mint video NFTs, buy video access and then watch your
           videos
         </h3>
-        <p className=" self-center text-sm text-red-500">We are currently only on Goerli Test Network.</p>
+        <p className=" self-center text-sm text-red-500">
+          We are currently only on Goerli Test Network.
+        </p>
         {isConnected && (
           <section className="flex flex-col align-middle justify-center items-center">
-            <TokenBalance
-              tokenAddress={ANIME_STUDIO_ERC20_TOKEN}
-              symbol="ANST"
-            />
-            <BuyTokens contractAddress={ANIME_STUDIO_CONTRACT_ADDRESS} />
+            <TokenBalance tokenAddress={activeContracts?.token} symbol="ANST" />
+            <BuyTokens contractAddress={activeContracts?.main} />
           </section>
         )}
       </main>
       <section>
-        <VideoGallery contractAddress={ANIME_STUDIO_CONTRACT_ADDRESS} />
+        <VideoGallery contractAddress={activeContracts?.main} />
       </section>
     </div>
   );

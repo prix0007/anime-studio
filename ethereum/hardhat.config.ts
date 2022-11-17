@@ -10,6 +10,7 @@ const {
   ETHERSCAN_API_KEY,
   ETHERSCAN_API_KEY_POLYSCAN,
   ALCHEMY_POLYGON_TESTNET_HTTP,
+  ZKSYNC_TESTNET_HTTP,
 } = process.env;
 
 const config: HardhatUserConfig = {
@@ -32,7 +33,9 @@ const config: HardhatUserConfig = {
     tests: "tests",
   },
   networks: {
-    hardhat: {},
+    hardhat: {
+      allowUnlimitedContractSize: true
+    },
     goerli: {
       url: API_URL,
       accounts: [`0x${PRIVATE_KEY}`],
@@ -40,6 +43,11 @@ const config: HardhatUserConfig = {
     maticmum: {
       url: ALCHEMY_POLYGON_TESTNET_HTTP,
       accounts: [`0x${PRIVATE_KEY}`],
+    },
+    zksync: {
+      url: ZKSYNC_TESTNET_HTTP,
+      accounts: [`0x${PRIVATE_KEY}`],
+      allowUnlimitedContractSize: true
     },
   },
   etherscan: {

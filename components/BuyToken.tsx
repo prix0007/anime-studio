@@ -12,14 +12,14 @@ type TokenBalanceProps = {
 };
 
 const BuyTokens = ({ contractAddress }: TokenBalanceProps) => {
-  const { account } = useWeb3React<Web3Provider>();
+
   const contract = useAnimeStudioContract(contractAddress);
 
   const [currentRatio, setCurrentRatio] = useState("");
   useEffect(() => {
     (async () => {
-      const ratio = await contract.conversionRatio();
-      setCurrentRatio(ratio.toString());
+      const ratio = await contract?.conversionRatio();
+      setCurrentRatio(ratio?.toString() || "");
     })();
   }, [contract]);
 

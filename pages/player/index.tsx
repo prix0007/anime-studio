@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Player } from "@livepeer/react";
 import styles from "../../styles/VideoPlayer.module.css";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Navbar from "../../components/Navbar";
+import { Contracts } from "../_app";
 
 export default function VideoPlayer() {
   const { query } = useRouter();
+
+  const contracts = useContext(Contracts);
+
+  console.log(contracts);
 
   useEffect(() => {
     return setPlaybackSource(query?.videoId as string || "");
