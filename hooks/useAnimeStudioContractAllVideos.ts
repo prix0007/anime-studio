@@ -39,6 +39,7 @@ export default function useAnimeStudioAllVideos(
     typeof from === "number" &&
     typeof to === "number" &&
     typeof contractAddress === "string" &&
+    from < to &&
     !!contract;
 
   const result = useSWR(

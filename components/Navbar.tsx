@@ -71,7 +71,7 @@ const Navbar = () => {
                     About
                   </a>
                 </li> */}
-                <div className="flex flex-col justify-center">
+                <li className="flex flex-col justify-center">
                   <ETHBalance />
                   {activeContracts && (
                     <TokenBalance
@@ -79,19 +79,21 @@ const Navbar = () => {
                       symbol="ANST"
                     />
                   )}
-                </div>
+                </li>
                 <Account triedToEagerConnect={triedToEagerConnect} />
               </>
             )}
             {isConnected ? (
-              <Button name={"Mint a Video NFT"} link={"/upload"} />
+              <li>
+                <Button name={"Mint a Video NFT"} link={"/upload"} />
+              </li>
             ) : (
-              <>
+              <li>
                 <Account triedToEagerConnect={triedToEagerConnect} />
                 <p className="self-center text-2xl my-3 text-gray-900">
                   Connect to you wallet to mint a Video NFT.
                 </p>
-              </>
+              </li>
             )}
           </ul>
         </div>

@@ -6,7 +6,6 @@ import { ClockLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import useAnimeStudioContract from "../hooks/useAnimeStudioContract";
 import useCurrentContracts from "../hooks/useCurrentContracts";
-import { parseBalance } from "../util";
 import Button from "./Button";
 
 const BuyTokens = () => {
@@ -17,7 +16,6 @@ const BuyTokens = () => {
   useEffect(() => {
     (async () => {
       if (contract) {
-        console.log(contract);
         const ratio = await contract.conversionRatio();
         setCurrentRatio(ratio?.toString() || "");
       }
@@ -32,7 +30,6 @@ const BuyTokens = () => {
     let amountEth;
     try {
       amountEth = ethers.utils.parseEther(amount);
-      console.log(amountEth.toString());
       setLoading(true);
     } catch (e) {
       console.log(e.message);
@@ -79,7 +76,7 @@ const BuyTokens = () => {
               className="block p-4 mb-1 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="ETH you want to buy tokens for. 0.1 ETH, 0.2, ..."
             />
-            <Button name="Buy Tokens" onClick={handleBuyTokens} />
+            <Button name="Buy ANST Tokens" onClick={handleBuyTokens} />
           </div>
         )}
       </div>

@@ -4,14 +4,9 @@ import styles from "../../styles/VideoPlayer.module.css";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Navbar from "../../components/Navbar";
-import { Contracts } from "../_app";
 
 export default function VideoPlayer() {
   const { query } = useRouter();
-
-  const contracts = useContext(Contracts);
-
-  console.log(contracts);
 
   useEffect(() => {
     return setPlaybackSource(query?.videoId as string || "");
@@ -33,7 +28,7 @@ export default function VideoPlayer() {
         <Navbar />
       </header>
       <div className={styles.main}>
-        <h1 className="text-6xl m-5">Stream Your Video</h1>
+        <h1 className="text-6xl m-5">Steaming your video.</h1>
         {playbackSource && playbackSource.includes(playbackurl) ? (
           <Player src={playbackSource} autoPlay={true} aspectRatio={"16to9"} />
         ) : (

@@ -29,7 +29,7 @@ const VideoGallery = () => {
   useEffect(() => {
     console.log(videos);
     console.log(totalVideos);
-  }, [videos]);
+  }, [videos, totalVideos]);
 
   return (
     <section className="overflow-hidden text-gray-700 ">
@@ -38,10 +38,6 @@ const VideoGallery = () => {
           {totalVideos?.toNumber() == 0 && <p>No Video Exists Yet!!</p>}
           {videos
             ? videos.map((video, _idx) => {
-                // Dump code
-                if (_idx == 3) {
-                  return;
-                }
                 return (
                   <div className="flex flex-wrap" key={_idx}>
                     <div className="w-full p-1 md:p-2">
