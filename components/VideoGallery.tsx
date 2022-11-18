@@ -1,21 +1,27 @@
-import React, { useContext, useEffect } from "react";
+import { useWeb3React } from "@web3-react/core";
+import React, { useContext, useEffect, useState } from "react";
 import { ClockLoader } from "react-spinners";
+import { toast } from "react-toastify";
 import useAnimeStudioContract from "../hooks/useAnimeStudioContract";
 import useAnimeStudioAllVideos from "../hooks/useAnimeStudioContractAllVideos";
 import useAnimeStudioAllVideosCount from "../hooks/useAnimeStudioContractAllVideosCount";
+import useCurrentContracts from "../hooks/useCurrentContracts";
 
 import Video from "./Video";
 
-const VideoGallery = ({ contractAddress }) => {
-  const { data: totalVideos, error: totalError } =
-    useAnimeStudioAllVideosCount(contractAddress);
+const VideoGallery = () => {
+  const activeContracts = useCurrentContracts();
+
+  const { data: totalVideos, error: totalError } = useAnimeStudioAllVideosCount(
+    activeContracts?.main
+  );
 
   const {
     data: videos,
     error: videoErrors,
     isValidating,
   } = useAnimeStudioAllVideos(
-    contractAddress,
+    activeContracts?.main,
     0,
     totalVideos && totalVideos.toNumber()
   );
@@ -39,7 +45,11 @@ const VideoGallery = ({ contractAddress }) => {
                 return (
                   <div className="flex flex-wrap" key={_idx}>
                     <div className="w-full p-1 md:p-2">
-                      <Video tokenId={_idx} {...video} />
+                      <Video
+                        tokenId={_idx}
+                        activeContracts={activeContracts}
+                        {...video}
+                      />
                     </div>
                   </div>
                 );

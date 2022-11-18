@@ -15,6 +15,8 @@ import useAnimeStudioContract from "../hooks/useAnimeStudioContract";
 import useTokenContract from "../hooks/useTokenContract";
 import Button from "./Button";
 import Link from "next/link";
+import { ActiveContract } from "../hooks/useCurrentContracts";
+
 
 const PosterImage = () => {
   return (
@@ -31,6 +33,7 @@ type VideoProps = {
   creator: string;
   metadata: string;
   tokenId: number;
+  activeContracts: ActiveContract ;
 };
 
 const ANIME_STUDIO_CONTRACT_ADDRESS =
@@ -39,11 +42,17 @@ const ANIME_STUDIO_CONTRACT_ADDRESS =
 const ANIME_STUDIO_TOKEN_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_ANIME_STUDIO_ERC20_TOKEN_ADDRESS;
 
-const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
+const Video: FC<VideoProps> = ({
+  metadata,
+  activeContracts,
+  price,
+  creator,
+  tokenId,
+}) => {
   const { account } = useWeb3React();
 
-  const contract = useAnimeStudioContract(ANIME_STUDIO_CONTRACT_ADDRESS);
-  const tokenContract = useTokenContract(ANIME_STUDIO_TOKEN_CONTRACT_ADDRESS);
+  const contract = useAnimeStudioContract(activeContracts.main);
+  const tokenContract = useTokenContract(activeContracts.token);
 
   const [isAllowanceButton, setAllowanceButton] = useState(false);
 
@@ -52,14 +61,10 @@ const Video: FC<VideoProps> = ({ metadata, price, creator, tokenId }) => {
     return await res.json();
   });
 
-  console.log(data);
-
   const { data: videoDetails, error: videoError } =
     useAnimeStudioGetVideoDetails(ANIME_STUDIO_CONTRACT_ADDRESS, tokenId);
 
-  useEffect(() => {
-    // console.log(videoDetails);
-  }, [videoDetails]);
+  
 
   const buyVideo = async () => {
     if (!account) {

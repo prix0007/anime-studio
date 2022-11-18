@@ -14,6 +14,7 @@ import VideoGallery from "../components/VideoGallery";
 
 import { Contracts } from "../pages/_app";
 import { toast } from "react-toastify";
+import useCurrentContracts from "../hooks/useCurrentContracts";
 
 function Home() {
   const { account, library, chainId } = useWeb3React();
@@ -22,25 +23,7 @@ function Home() {
 
   const isConnected = typeof account === "string" && !!library;
 
-  const contracts = useContext(Contracts);
-
-  const [activeContracts, setActiveContracts] = useState<{
-    main: string;
-    token: string;
-    nft: string;
-  }>(null);
-
-  useEffect(() => {
-    console.log(chainId);
-    console.log(contracts[chainId]);
-    if (contracts[chainId]) {
-      setActiveContracts({
-        ...contracts[chainId],
-      });
-    } else {
-      toast("We don't support this network.");
-    }
-  }, [account]);
+  const activeContracts = useCurrentContracts();
 
   return (
     <div>
@@ -63,13 +46,12 @@ function Home() {
         </p>
         {isConnected && (
           <section className="flex flex-col align-middle justify-center items-center">
-            <TokenBalance tokenAddress={activeContracts?.token} symbol="ANST" />
-            <BuyTokens contractAddress={activeContracts?.main} />
+            <BuyTokens />
           </section>
         )}
       </main>
       <section>
-        <VideoGallery contractAddress={activeContracts?.main} />
+        <VideoGallery />
       </section>
     </div>
   );
