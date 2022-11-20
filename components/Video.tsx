@@ -17,7 +17,6 @@ import Button from "./Button";
 import Link from "next/link";
 import { ActiveContract } from "../hooks/useCurrentContracts";
 
-
 const PosterImage = () => {
   return (
     <img
@@ -33,14 +32,8 @@ type VideoProps = {
   creator: string;
   metadata: string;
   tokenId: number;
-  activeContracts: ActiveContract ;
+  activeContracts: ActiveContract;
 };
-
-const ANIME_STUDIO_CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_ANIME_STUDIO_CONTRACT_ADDRESS;
-
-const ANIME_STUDIO_TOKEN_CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_ANIME_STUDIO_ERC20_TOKEN_ADDRESS;
 
 const Video: FC<VideoProps> = ({
   metadata,
@@ -62,9 +55,7 @@ const Video: FC<VideoProps> = ({
   });
 
   const { data: videoDetails, error: videoError } =
-    useAnimeStudioGetVideoDetails(ANIME_STUDIO_CONTRACT_ADDRESS, tokenId);
-
-  
+    useAnimeStudioGetVideoDetails(activeContracts.main, tokenId);
 
   const buyVideo = async () => {
     if (!account) {
@@ -73,8 +64,10 @@ const Video: FC<VideoProps> = ({
 
     const allowance = await tokenContract.allowance(
       account,
-      ANIME_STUDIO_CONTRACT_ADDRESS
+      activeContracts.main
     );
+    console.log(allowance);
+    console.log(price);
     if (allowance.lt(price)) {
       toast("Please allow anime studio contract to spend your ANST Token!!!");
       setAllowanceButton(true);
@@ -92,7 +85,7 @@ const Video: FC<VideoProps> = ({
   const setAllowance = async () => {
     toast("wait for tx to go through!!");
     const tx = await tokenContract.approve(
-      ANIME_STUDIO_CONTRACT_ADDRESS,
+      activeContracts.main,
       price
     );
     tx.wait();

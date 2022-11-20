@@ -24,6 +24,7 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { Contracts } from "../_app";
+import useCurrentContracts from "../../hooks/useCurrentContracts";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -52,24 +53,10 @@ const Upload = () => {
   const [tx, setTx] = useState(null);
   const [txLoading, setTxLoading] = useState(true);
 
-  const contracts = useContext(Contracts);
-
-  const [activeContracts, setActiveContracts] = useState<{
-    main: string;
-    token: string;
-    nft: string;
-  }>(null);
+  const activeContracts = useCurrentContracts();
 
   // AnimeStudio Contract
   const animeContract = useAnimeStudioContract(activeContracts?.main);
-
-  useEffect(() => {
-    if (contracts[chainId]) {
-      setActiveContracts({
-        ...contracts[chainId],
-      });
-    }
-  }, [contracts]);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
@@ -241,6 +228,9 @@ const Upload = () => {
       const finalPrice = ethers.utils.parseEther(price);
 
       setTxLoading(true);
+
+      console.log(animeContract);
+      console.log(activeContracts);
 
       const tx = await animeContract.addVideo(
         playbackId,
