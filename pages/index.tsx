@@ -1,29 +1,15 @@
 import { useWeb3React } from "@web3-react/core";
 import Head from "next/head";
-import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
-import Account from "../components/Account";
-import ETHBalance from "../components/ETHBalance";
-import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
-import { useLivepeerProvider } from "@livepeer/react";
-import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import BuyTokens from "../components/BuyToken";
 import VideoGallery from "../components/VideoGallery";
 
-import { Contracts } from "../pages/_app";
-import { toast } from "react-toastify";
 import useCurrentContracts from "../hooks/useCurrentContracts";
 
 function Home() {
-  const { account, library, chainId } = useWeb3React();
-
-  const triedToEagerConnect = useEagerConnect();
-
+  const { account, library } = useWeb3React();
   const isConnected = typeof account === "string" && !!library;
-
-  const activeContracts = useCurrentContracts();
 
   return (
     <div>

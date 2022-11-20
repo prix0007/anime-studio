@@ -23,7 +23,6 @@ import { ethers } from "ethers";
 
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { Contracts } from "../_app";
 import useCurrentContracts from "../../hooks/useCurrentContracts";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

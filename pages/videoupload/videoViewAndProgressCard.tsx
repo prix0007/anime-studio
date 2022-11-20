@@ -96,15 +96,15 @@ const VideoViewAndProgressCard: React.FC<IVideoViewAndProgressCard> = ({
   return (
     <div className="block ">
       <h5 className="my-2 ml-2 text-2xl font-bold tracking-tight break-words	 text-gray-900 dark:text-white">
-        {video.name}
+        {video?.name}
       </h5>
       <div className="flex justify-between items-start p-2">
         <div>
           <p className="font-normal text-gray-700 dark:text-gray-400">
-            {video.size} bytes
+            {video?.size} bytes
           </p>
           <p className="font-normal text-gray-700 dark:text-gray-400">
-            {video.type}
+            {video?.type}
           </p>
           <br />
           {phaseToBadge(progress?.phase)}
