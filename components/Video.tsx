@@ -66,8 +66,7 @@ const Video: FC<VideoProps> = ({
       account,
       activeContracts.main
     );
-    console.log(allowance);
-    console.log(price);
+    
     if (allowance.lt(price)) {
       toast("Please allow anime studio contract to spend your ANST Token!!!");
       setAllowanceButton(true);

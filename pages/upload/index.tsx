@@ -229,9 +229,6 @@ const Upload = () => {
 
       setTxLoading(true);
 
-      console.log(animeContract);
-      console.log(activeContracts);
-
       const tx = await animeContract.addVideo(
         playbackId,
         metaDataHash,

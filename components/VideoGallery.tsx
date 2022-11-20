@@ -26,10 +26,10 @@ const VideoGallery = () => {
     totalVideos && totalVideos.toNumber()
   );
 
-  useEffect(() => {
-    console.log(videos);
-    console.log(totalVideos);
-  }, [videos, totalVideos]);
+  // useEffect(() => {
+  //   console.log(videos);
+  //   console.log(totalVideos);
+  // }, [videos, totalVideos]);
 
   return (
     <section className="overflow-hidden text-gray-700 ">
